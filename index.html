@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
+    <title>JOS ALUKKAS — Financial Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(145deg, #0a1628, #0f1a30);
+            position: relative;
+        }
+
+        /* subtle grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* glow orbs - navy + mint */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            opacity: 0.06;
+            z-index: 0;
+        }
+        .orb-1 { width: 500px; height: 500px; background: #3b82f6; top: -200px; right: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: #34d399; bottom: -150px; left: -100px; }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            width: 100%;
+        }
+
+        /* ===== CARD – DARK NAVY ===== */
+        .card {
+            background: rgba(10, 22, 40, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 40px 28px 36px;
+            border: 1px solid rgba(52, 211, 153, 0.06);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        /* top accent – mint line */
+        .card::before {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #34d399, #3b82f6);
+            border-radius: 4px;
+            margin: 0 auto 22px;
+            opacity: 0.6;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .badge {
+            background: rgba(52, 211, 153, 0.06);
+            padding: 4px 16px;
+            border-radius: 60px;
+            font-size: 8px;
+            font-weight: 700;
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.04);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .verified {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 8px;
+            font-weight: 600;
+            color: #60a5fa;
+            background: rgba(59, 130, 246, 0.04);
+            padding: 3px 12px;
+            border-radius: 60px;
+            border: 1px solid rgba(59, 130, 246, 0.04);
+        }
+
+        .verified svg {
+            width: 12px;
+            height: 12px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+
+        /* ===== PROFILE ===== */
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 6px 4px;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: calc(100% + 6px);
+            height: calc(100% + 6px);
+            border-radius: 50%;
+            border: 1px solid rgba(52, 211, 153, 0.06);
+        }
+
+        .avatar {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(52, 211, 153, 0.02);
+            background: #0a1628;
+            display: block;
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        .info .name {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+
+        .info .name span {
+            background: linear-gradient(135deg, #34d399, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info .tagline {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 400;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ================================================================ */
+        /* ===== INTRO ===== */
+        .intro {
+            background: rgba(52, 211, 153, 0.02);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(52, 211, 153, 0.03);
+            text-align: center;
+        }
+
+        .intro p {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .intro p strong {
+            color: #34d399;
+            font-weight: 600;
+        }
+
+        .intro .hl {
+            color: #34d399;
+            font-weight: 500;
+        }
+
+        /* ================================================================ */
+        /* ===== BUTTON – SLIDING BLUE/MINT ===== */
+        /* ================================================================ */
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 0;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #3b82f6, #34d399, #3b82f6, #34d399);
+            background-size: 300% 300%;
+            animation: slideGradient 4s ease-in-out infinite;
+            box-shadow: 0 4px 16px rgba(52, 211, 153, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        @keyframes slideGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(52, 211, 153, 0.1);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn .sub {
+            display: block;
+            font-size: 10px;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-bottom {
+            margin-bottom: 0;
+            margin-top: 4px;
+        }
+
+        /* ===== STATS ===== */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 14px 0;
+            margin-bottom: 18px;
+            border-top: 1px solid rgba(52, 211, 153, 0.02);
+            border-bottom: 1px solid rgba(52, 211, 153, 0.02);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat .number {
+            font-size: 20px;
+            font-weight: 800;
+            color: #34d399;
+        }
+
+        .stat .label {
+            font-size: 7px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* ===== FEATURES – 2 Column ===== */
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            font-weight: 450;
+            color: #e2e8f0;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 8px;
+            border: 1px solid rgba(52, 211, 153, 0.02);
+            transition: 0.2s;
+        }
+
+        .feature:hover {
+            background: rgba(52, 211, 153, 0.02);
+            border-color: rgba(52, 211, 153, 0.04);
+        }
+
+        .feature .icon {
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* ===== TRUST BADGES ===== */
+        .trust {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 8px;
+            font-weight: 500;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.01);
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .trust-item svg {
+            width: 12px;
+            height: 12px;
+            color: #34d399;
+        }
+
+        /* ================================================================ */
+        /* ===== AGENCY LINK ===== */
+        /* ================================================================ */
+        .agency-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(52, 211, 153, 0.02);
+            border: 1px solid rgba(52, 211, 153, 0.04);
+            border-radius: 30px;
+            text-decoration: none;
+            transition: 0.2s;
+            width: fit-content;
+            margin: 0 auto 14px;
+        }
+
+        .agency-link:hover {
+            background: rgba(52, 211, 153, 0.04);
+            border-color: rgba(52, 211, 153, 0.08);
+        }
+
+        .agency-link .icon {
+            font-size: 10px;
+        }
+
+        .agency-link .text {
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .agency-link .name {
+            font-size: 9px;
+            color: #34d399;
+            font-weight: 600;
+        }
+
+        /* ===== META DISCLAIMER ===== */
+        .meta-disclaimer {
+            background: rgba(52, 211, 153, 0.02);
+            border-radius: 8px;
+            padding: 10px 14px;
+            border: 1px solid rgba(52, 211, 153, 0.02);
+            font-size: 8px;
+            color: #6b7a7a;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .meta-disclaimer strong {
+            color: #34d399;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(52, 211, 153, 0.02);
+            text-align: center;
+        }
+
+        .footer-note {
+            font-size: 8px;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .footer-disclaimer {
+            font-size: 6px;
+            color: #334155;
+            margin-top: 4px;
+        }
+
+        /* ================================================================ */
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 400px) {
+            .card {
+                padding: 28px 16px 24px;
+                border-radius: 24px;
+            }
+            .profile {
+                flex-direction: column;
+                text-align: center;
+                padding: 4px 0;
+            }
+            .info {
+                text-align: center;
+            }
+            .avatar {
+                width: 64px;
+                height: 64px;
+            }
+            .info .name {
+                font-size: 18px;
+            }
+            .info .tagline {
+                font-size: 10px;
+            }
+            .stat .number {
+                font-size: 18px;
+            }
+            .stats {
+                gap: 6px;
+                padding: 10px 0;
+            }
+            .btn {
+                font-size: 14px;
+                padding: 12px 0;
+            }
+            .feature {
+                font-size: 10px;
+                padding: 6px 10px;
+            }
+            .features {
+                gap: 6px;
+            }
+            .intro p {
+                font-size: 11px;
+            }
+            .agency-link .text,
+            .agency-link .name {
+                font-size: 8px;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .card {
+                max-width: 440px;
+                padding: 40px 32px 32px;
+            }
+            .avatar {
+                width: 85px;
+                height: 85px;
+            }
+            .info .name {
+                font-size: 24px;
+            }
+            .stat .number {
+                font-size: 22px;
+            }
+            .btn {
+                font-size: 16px;
+                padding: 14px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- background -->
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="main-wrapper">
+
+        <div class="card">
+
+            <!-- Header -->
+            <div class="header">
+                <span class="badge">💰 Money Investment</span>
+                <span class="verified">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    Trusted
+                </span>
+            </div>
+
+            <!-- Profile -->
+            <div class="profile">
+                <div class="avatar-wrap">
+                    <div class="avatar-ring"></div>
+                    <img class="avatar"
+                         src="https://i.ibb.co/JWJK5wwG/IMG-1792.png"
+                         alt="JOS ALUKKAS MONEY INVESTMENT"
+                         loading="lazy"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22%3E%3Crect width=%22120%22 height=%22120%22 fill=%22%230a1628%22/%3E%3Ctext x=%2260%22 y=%2270%22 text-anchor=%22middle%22 font-size=%2236%22 fill=%22%2334d399%22 font-family=%22sans-serif%22%3EJA%3C/text%3E%3C/svg%3E'">
+                </div>
+                <div class="info">
+                    <div class="name"><span>JOS ALUKKAS</span><br>MONEY INVESTMENT</div>
+                    <div class="tagline">💎 Your Trusted Wealth Partner</div>
+                </div>
+            </div>
+
+            <!-- Intro -->
+            <div class="intro">
+                <p>
+                    <strong>JOS ALUKKAS MONEY INVESTMENT</strong> provides <span class="hl">financial education &amp; awareness</span> 
+                    on loans, wealth management, credit improvement, and investment concepts. 
+                    <strong>Not financial advice.</strong>
+                </p>
+            </div>
+
+            <!-- ===== BUTTON 1 – SLIDING ===== -->
+            <a href="https://chat.whatsapp.com/KSWeuRYGEJN0GlgFotumeB" class="btn" target="_blank" rel="noopener noreferrer">
+                📱 Join WhatsApp Channel
+                <span class="sub">Start Your Financial Journey</span>
+            </a>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat">
+                    <div class="number">2.5K+</div>
+                    <div class="label">Members</div>
+                </div>
+                <div class="stat">
+                    <div class="number">4.8★</div>
+                    <div class="label">Rating</div>
+                </div>
+                <div class="stat">
+                    <div class="number">24/7</div>
+                    <div class="label">Support</div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="features">
+                <div class="feature">
+                    <span class="icon">📘</span>
+                    <span>Loan Education</span>
+                </div>
+                <div class="feature">
+                    <span class="icon">📊</span>
+                    <span>Wealth Awareness</span>
+                </div>
+                <div class="feature">
+                    <span class="icon">🏦</span>
+                    <span>Credit Guidance</span>
+                </div>
+                <div class="feature">
+                    <span class="icon">📈</span>
+                    <span>Investment Concepts</span>
+                </div>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="trust">
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Educational
+                </span>
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    Community
+                </span>
+                <span class="trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Support
+                </span>
+            </div>
+
+            <!-- ===== BUTTON 2 – SLIDING ===== -->
+            <a href="https://chat.whatsapp.com/KSWeuRYGEJN0GlgFotumeB" class="btn btn-bottom" target="_blank" rel="noopener noreferrer">
+                📱 Join WhatsApp Channel
+                <span class="sub">Start Your Financial Journey</span>
+            </a>
+
+            <!-- ===== AGENCY LINK ===== -->
+            <a href="https://t.me/+CKzXLc93ze44MTdl" class="agency-link" target="_blank" rel="noopener">
+                <span class="icon">🔥</span>
+                <span class="text">Ads by</span>
+                <span class="name">@amitgrowthagency</span>
+                <span class="text">• Boost Your Reach 🚀</span>
+            </a>
+
+            <!-- ===== META DISCLAIMER ===== -->
+            <div class="meta-disclaimer">
+                <strong>⚠️ Educational Purpose Only:</strong> General financial education &amp; awareness. 
+                Not personalized advice. Consult a qualified advisor for your specific needs.
+            </div>
+
+            <!-- ===== FOOTER ===== -->
+            <div class="footer">
+                <div class="footer-note">
+                    <span class="footer-disclaimer">Not affiliated with Facebook™ or Meta™.</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
